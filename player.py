@@ -29,5 +29,3 @@ class Player():
             self.area[len(self.area)-1][0] = 1
         else:
             self.area[0][len(self.area[0])-1] = 1
-
-        print(self.area)
