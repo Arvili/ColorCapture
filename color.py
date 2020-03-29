@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton
 
-colors = [Qt.red, Qt.green, Qt.blue, Qt.magenta, Qt.yellow]
+colors = [Qt.red, Qt.green, Qt.blue, Qt.yellow, Qt.magenta]
 
 class ColorItem(QtWidgets.QGraphicsRectItem):
 

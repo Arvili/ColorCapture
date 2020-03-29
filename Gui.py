@@ -30,15 +30,20 @@ class GUI(QWidget):
         self.init_window()
         self.player1 = Player(1)
         self.player2 = Player(2)
-        self.start_game()
+
+        self.current_player = self.player1
         
         #self.timer = QtCore.QTimer()
         #self.timer.setInterval(10)
         #self.timer.timeout.connect() #update player position in every 10ms
     
 
-    def start_game(self):
-        pass
+    def change_turn(self):
+        if(self.current_player == self.player1):
+            self.current_player = self.player2
+        else:
+            self.current_player = self.player1
+        print(self.current_player.get_number())
 
     def check_neighbour_colors(self):
         pass
@@ -53,7 +58,7 @@ class GUI(QWidget):
                 
     def init_window(self):
         #Set up the window
-        self.setFixedSize(1100, 600)
+        self.setFixedSize(1200, 600)
         self.setWindowTitle('Colour capture')
         self.setStyleSheet("QWidget { background: #aeddf9 }") 
         
@@ -65,10 +70,10 @@ class GUI(QWidget):
         #self.controlScene.setSceneRect(self.get_width(), 0, 1000-self.get_width(), self.get_height())
         
         self.view = QtWidgets.QGraphicsView(self.mainScene, self)
-        self.view.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.view.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.view.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        #self.view.adjustSize()
+        #self.view.setFocusPolicy(QtCore.Qt.NoFocus)
+        #self.view.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        #self.view.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.view.ensureVisible(self.mainScene.sceneRect())
 
         self.brush = QtGui.QBrush(Qt.SolidPattern)
         self.pen = QtGui.QPen(Qt.SolidLine)
@@ -79,7 +84,7 @@ class GUI(QWidget):
         self.paint_colors()
         self.init_buttons()
         
-            
+        
         self.show()
         self.view.show()        
 
@@ -111,9 +116,7 @@ class GUI(QWidget):
                 self.mainScene.addRect(m.get_rect_item(), self.pen, self.brush)
 
 
-    def change_colors(self):
-        self.init_colors()
-        self.paint_colors()
+    
                 
     def init_buttons(self):
     
@@ -129,13 +132,23 @@ class GUI(QWidget):
         self.purpleBtn.setStyleSheet('QPushButton {background-color: purple}')
 
         self.colorBtns = [self.greenBtn, self.redBtn, self.blueBtn, self.yellowBtn, self.purpleBtn]
-        j=0
+
         for idx, i in enumerate(self.colorBtns):
             i.resize(40, 40)
             i.move(self.get_width() + 20 + 50*idx, 150)
-            i.clicked.connect(self.change_colors)
+            i.clicked.connect(self.click_color(idx))
             self.mainScene.addWidget(i)
 
         self.greenBtn.hide()
         self.redBtn.hide()
                 
+    
+    def click_color(self, idx):
+        def choose_color():
+            self.current_player.set_color(idx)
+            self.change_turn()
+        return choose_color
+
+
+    def hide_color_buttons(self):
+        pass

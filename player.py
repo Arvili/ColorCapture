@@ -6,7 +6,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton
 
-colors = [Qt.red, Qt.green, Qt.cyan, Qt.magenta]
+colors = [Qt.red, Qt.green, Qt.cyan, Qt.yellow, Qt.magenta]
 
 class Player():
 
@@ -16,6 +16,14 @@ class Player():
         self.area = []
         self.init_own_area()
 
+    def get_number(self):
+        return self.number
+
+    def get_color(self):
+        return self.color
+
+    def set_color(self, idx):
+        self.color = colors[idx]
 
     def init_own_area(self):
         tmp = []
