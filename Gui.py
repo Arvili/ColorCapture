@@ -24,13 +24,14 @@ class GUI(QWidget):
     
     def __init__(self):
         self.colors = []
+        self.colorCodes = [Qt.green, Qt.red, Qt.blue, Qt.yellow, Qt.magenta]
         self.sceneWidth = 800
         self.sceneHeight = 500
         super().__init__()
-        self.init_window()
+        
         self.player1 = Player(1)
         self.player2 = Player(2)
-
+        self.init_window()
         self.current_player = self.player1
         
         #self.timer = QtCore.QTimer()
@@ -43,7 +44,7 @@ class GUI(QWidget):
             self.current_player = self.player2
         else:
             self.current_player = self.player1
-        print(self.current_player.get_number())
+        self.hide_color_buttons()
 
     def check_neighbour_colors(self):
         pass
@@ -139,8 +140,7 @@ class GUI(QWidget):
             i.clicked.connect(self.click_color(idx))
             self.mainScene.addWidget(i)
 
-        self.greenBtn.hide()
-        self.redBtn.hide()
+        self.hide_color_buttons()    
                 
     
     def click_color(self, idx):
@@ -151,4 +151,16 @@ class GUI(QWidget):
 
 
     def hide_color_buttons(self):
-        pass
+        player1_color = self.player1.get_color()
+        player2_color = self.player2.get_color()
+
+        for i in self.colorBtns:
+            i.show()
+
+        for idx, j in enumerate(self.colorCodes):
+            if player1_color == j:
+                self.colorBtns[idx].hide()
+
+        for idx2, k in enumerate(self.colorCodes):
+            if player2_color == k:
+                self.colorBtns[idx2].hide()
