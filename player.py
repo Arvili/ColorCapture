@@ -10,11 +10,11 @@ colors = [Qt.green, Qt.red, Qt.blue, Qt.yellow, Qt.magenta]
 
 class Player():
 
-    def __init__(self, number):
+    def __init__(self, number, width, height):
         self.color = colors[number-1]
         self.number = number
         self.area = []
-        self.init_own_area()
+        self.init_own_area(width, height)
 
     def get_number(self):
         return self.number
@@ -31,10 +31,13 @@ class Player():
     def set_color(self, idx):
         self.color = colors[idx]
 
-    def init_own_area(self):
+    def update_area(self, x, y):
+        self.area[x][y] = 1
+
+    def init_own_area(self, w, h):
         tmp = []
-        for i in range(0,500, 20):
-            for j in range(0,800, 20):
+        for i in range(0, h, 20):
+            for j in range(0,w, 20):
                 tmp.append(0)
             self.area.append(tmp)
             tmp = []

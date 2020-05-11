@@ -16,6 +16,7 @@ from PyQt5.QtGui import QBrush, QPen
 from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton, QLabel
 from color import ColorItem
 from player import Player
+import math
 import random
 
 
@@ -29,38 +30,11 @@ class GUI(QWidget):
         self.sceneHeight = 500
         super().__init__()
         
-        self.player1 = Player(1)
-        self.player2 = Player(2)
+        self.player1 = Player(1, self.sceneWidth, self.sceneHeight)
+        self.player2 = Player(2, self.sceneWidth, self.sceneHeight)
         self.init_window()
         self.current_player = self.player1
-        
-        #self.timer = QtCore.QTimer()
-        #self.timer.setInterval(10)
-        #self.timer.timeout.connect() #update player position in every 10ms
-    
 
-    def change_turn(self):
-        self.change_colors()
-        if(self.current_player == self.player1):
-            self.current_player = self.player2
-            self.turn_label.setText("Player 2's turn!")
-        else:
-            self.current_player = self.player1
-            self.turn_label.setText("Player 1's turn!")
-        self.hide_color_buttons()
-        self.paint_colors()
-
-    def check_neighbour_colors(self):
-        pass
-    
-    def get_width(self):
-        return self.sceneWidth
-
-    def get_height(self):
-        return self.sceneHeight
-        # grid 40 x 25
-     
-                
     def init_window(self):
         #Set up the window
         self.setFixedSize(1200, 600)
@@ -95,7 +69,26 @@ class GUI(QWidget):
         self.mainScene.addWidget(self.turn_label)
         
         self.show()
-        self.view.show()        
+        self.view.show() 
+
+    def change_turn(self):
+        self.change_colors()
+        if(self.current_player == self.player1):
+            self.current_player = self.player2
+            self.turn_label.setText("Player 2's turn!")
+        else:
+            self.current_player = self.player1
+            self.turn_label.setText("Player 1's turn!")
+        self.hide_color_buttons()
+        self.paint_colors()
+    
+    def get_width(self):
+        return self.sceneWidth
+
+    def get_height(self):
+        return self.sceneHeight
+        # grid 40 x 25
+               
 
         
     def init_color_items(self):
@@ -111,7 +104,6 @@ class GUI(QWidget):
             for m in n:
                 m.set_color(random.randint(0,4))
         self.init_corners()
-
 
     def init_corners(self):
         self.colors[len(self.colors)-1][0].set_color(0)
@@ -183,4 +175,25 @@ class GUI(QWidget):
             for jdx, j in enumerate(i):
                 if(players_area[idx][jdx] == 1):
                     j.set_color(new_color)
+                    self.check_neighbour_colors(idx, jdx, new_color)
                     
+
+    def check_neighbour_colors(self, x, y, c):
+        print(x, y, c)
+        print( self.get_height() / 20)
+        if(x > 0):
+            if (self.colors[x-1][y].get_color() == self.current_player.get_color()):
+                self.colors[x-1][y].set_color(c)
+                self.current_player.update_area(x-1, y)
+        if(x < (self.get_height() / 20 - 1)):
+            if (self.colors[x+1][y].get_color() == self.current_player.get_color()):
+                self.colors[x+1][y].set_color(c)
+                self.current_player.update_area(x+1, y)
+        if(y > 0):
+            if self.colors[x][y-1].get_color() == self.current_player.get_color():
+                self.colors[x][y-1].set_color(c)
+                self.current_player.update_area(x, y-1)
+        if(y < (self.get_width() / 20 - 1)):
+            if self.colors[x][y+1].get_color() == self.current_player.get_color():
+                self.colors[x][y+1].set_color(c)
+                self.current_player.update_area(x, y+1)
