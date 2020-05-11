@@ -13,7 +13,7 @@ import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QBrush, QPen
-from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton
+from PyQt5.QtWidgets import QWidget, QApplication, QGridLayout, QPushButton, QLabel
 from color import ColorItem
 from player import Player
 import random
@@ -40,11 +40,15 @@ class GUI(QWidget):
     
 
     def change_turn(self):
+        self.change_colors()
         if(self.current_player == self.player1):
             self.current_player = self.player2
+            self.turn_label.setText("Player 2's turn!")
         else:
             self.current_player = self.player1
+            self.turn_label.setText("Player 1's turn!")
         self.hide_color_buttons()
+        self.paint_colors()
 
     def check_neighbour_colors(self):
         pass
@@ -85,6 +89,10 @@ class GUI(QWidget):
         self.paint_colors()
         self.init_buttons()
         
+        self.turn_label = QLabel()
+        self.turn_label.setText("Player 1's turn!")
+        self.turn_label.move(900, 100)
+        self.mainScene.addWidget(self.turn_label)
         
         self.show()
         self.view.show()        
@@ -164,3 +172,15 @@ class GUI(QWidget):
         for idx2, k in enumerate(self.colorCodes):
             if player2_color == k:
                 self.colorBtns[idx2].hide()
+
+
+    def change_colors(self):
+        new_color = self.current_player.get_color_index()
+        players_area = self.current_player.get_area()
+        
+
+        for idx, i in enumerate(self.colors):
+            for jdx, j in enumerate(i):
+                if(players_area[idx][jdx] == 1):
+                    j.set_color(new_color)
+                    

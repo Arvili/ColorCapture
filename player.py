@@ -22,6 +22,12 @@ class Player():
     def get_color(self):
         return self.color
 
+    def get_color_index(self):
+        return colors.index(self.color)
+
+    def get_area(self):
+        return self.area
+
     def set_color(self, idx):
         self.color = colors[idx]
 
