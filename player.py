@@ -15,6 +15,7 @@ class Player():
         self.number = number
         self.area = []
         self.init_own_area(width, height)
+        self.area_size = 1
 
     def get_number(self):
         return self.number
@@ -33,6 +34,10 @@ class Player():
 
     def update_area(self, x, y):
         self.area[x][y] = 1
+        self.area_size += 1
+
+    def get_area_size(self):
+        return self.area_size
 
     def init_own_area(self, w, h):
         tmp = []

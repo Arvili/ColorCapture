@@ -26,24 +26,25 @@ class GUI(QWidget):
     def __init__(self):
         self.colors = []
         self.colorCodes = [Qt.green, Qt.red, Qt.blue, Qt.yellow, Qt.magenta]
-        self.sceneWidth = 800
-        self.sceneHeight = 500
+        self.sceneWidth = 600
+        self.sceneHeight = 300
         super().__init__()
         
         self.player1 = Player(1, self.sceneWidth, self.sceneHeight)
         self.player2 = Player(2, self.sceneWidth, self.sceneHeight)
         self.init_window()
         self.current_player = self.player1
+        self.winning_size = 0.5*(self.get_width()/20)*(self.get_height()/20)
 
     def init_window(self):
         #Set up the window
-        self.setFixedSize(1200, 600)
+        self.setFixedSize(self.get_width()+400, self.get_height()+100)
         self.setWindowTitle('Colour capture')
         self.setStyleSheet("QWidget { background: #aeddf9 }") 
         
         #set up scenes
         self.mainScene = QtWidgets.QGraphicsScene()
-        self.mainScene.setSceneRect(0, 0, 1100, 500)
+        self.mainScene.setSceneRect(0, 0, self.get_width()+400, self.get_height()+100)
 
         #self.controlScene = QtWidgets.QGraphicsScene()
         #self.controlScene.setSceneRect(self.get_width(), 0, 1000-self.get_width(), self.get_height())
@@ -65,22 +66,23 @@ class GUI(QWidget):
         
         self.turn_label = QLabel()
         self.turn_label.setText("Player 1's turn!")
-        self.turn_label.move(900, 100)
+        self.turn_label.move(self.get_width()+100, 100)
         self.mainScene.addWidget(self.turn_label)
         
         self.show()
         self.view.show() 
 
     def change_turn(self):
-        self.change_colors()
-        if(self.current_player == self.player1):
-            self.current_player = self.player2
-            self.turn_label.setText("Player 2's turn!")
-        else:
-            self.current_player = self.player1
-            self.turn_label.setText("Player 1's turn!")
-        self.hide_color_buttons()
-        self.paint_colors()
+        if(self.check_winner() == False):
+            self.change_colors()
+            if(self.current_player == self.player1):
+                self.current_player = self.player2
+                self.turn_label.setText("Player 2's turn!")
+            else:
+                self.current_player = self.player1
+                self.turn_label.setText("Player 1's turn!")
+            self.hide_color_buttons()
+            self.paint_colors()
     
     def get_width(self):
         return self.sceneWidth
@@ -88,8 +90,15 @@ class GUI(QWidget):
     def get_height(self):
         return self.sceneHeight
         # grid 40 x 25
+    
+    def get_winning_size(self):
+        return self.winning_size
                
-
+    def check_winner(self):
+        if(self.current_player.get_area_size() > self.get_winning_size()):
+            return True
+        return False
+        
         
     def init_color_items(self):
         tmp = []
@@ -179,8 +188,6 @@ class GUI(QWidget):
                     
 
     def check_neighbour_colors(self, x, y, c):
-        print(x, y, c)
-        print( self.get_height() / 20)
         if(x > 0):
             if (self.colors[x-1][y].get_color() == self.current_player.get_color()):
                 self.colors[x-1][y].set_color(c)
